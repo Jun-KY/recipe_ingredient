@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${recipe.id != null ? 'Edit Recipe' : 'New Recipe'}">Recipe Form</title>
+  <link rel="stylesheet" th:href="@/styles.css}">
+</head>
+<body>
+<div class="container">
+  <h1 th:text="${recipe.id != null ? 'Edit Recipe' : 'Create New Recipe'}">Recipe Form</h1>
+
+  <form th:action="${recipe.id != null} ? @{'/recipes/' + ${recipe.id} + '/edit'} : @{/recipes}"
+        method="post">
+    <label for="name">Name</label>
+    <input id="name" name="name" type="text" th:value="${recipe.name}" required>
+
+    <label for="description">Description</label>
+    <textarea id="description" name="description" rows="4"
+              th:text="${recipe.description}"></textarea>
+
+    <button class="btn" type="submit">Save</button>
+    <a class="btn btn-secondary" th:href="@{/recipes}">Cancel</a>
+  </form>
+</div>
+</body>
+</html>

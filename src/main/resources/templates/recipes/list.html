@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+  <title>Recipe List</title>
+  <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+<div class="container">
+  <h1>🍳 Recipe List</h1>
+
+  <a class="btn" th:href="@{/recipes/new}">➕ Add New Recipe</a>
+
+  <div class="recipe-list">
+    <div class="recipe-card" th:each="recipe : ${recipes}">
+      <h3 th:text="${recipe.name}">Recipe Name</h3>
+      <p th:text="${recipe.description}">Short description of recipe...</p>
+      <div>
+        <a class="btn" th:href="@{|/recipes/${recipe.id}|}">View</a>
+        <a class="btn btn-secondary" th:href="@{|/recipes/${recipe.id}/edit|}">Edit</a>
+        <form th:action="@{|/recipes/${recipe.id}/delete|}" method="post" style="display:inline;">
+          <button class="btn btn-danger" type="submit">Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer>Recipe Sharing Platform © 2025</footer>
+</div>
+</body>
+</html>

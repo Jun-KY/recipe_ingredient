@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${recipe.name}">Recipe Detail</title>
+  <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+<div class="container">
+  <h1 th:text="${recipe.name}">Recipe Name</h1>
+  <p th:text="${recipe.description}">Recipe description...</p>
+
+  <h2>Ingredients</h2>
+  <table>
+    <thead>
+    <tr>
+      <th>Ingredient</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ing : ${recipe.ingredients}">
+      <td th:text="${ing.name}">Ingredient Name</td>
+      <td>
+        <form th:action="@{|/recipes/${recipe.id}/ingredients/${ing.id}/remove|}" method="post">
+          <button class="btn btn-danger" type="submit">Remove</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <h3>Add Ingredient</h3>
+  <form th:action="@{|/recipes/${recipe.id}/ingredients/add|}" method="post">
+    <label for="ingredientName">Ingredient Name</label>
+    <input type="text" id="ingredientName" name="ingredientName" required>
+    <button class="btn" type="submit">Add</button>
+  </form>
+
+  <a class="btn btn-secondary" th:href="@{/recipes}">⬅ Back to List</a>
+</div>
+</body>
+</html>
