@@ -2,12 +2,12 @@
 <html lang="en" html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title th:text="${recipe.name}">Recipe Detail</title>
+  <title th:text="${recipe.title}">Recipe Detail</title>
   <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 <body>
 <div class="container">
-  <h1 th:text="${recipe.name}">Recipe Name</h1>
+  <h1 th:text="${recipe.title}">Recipe Name</h1>
   <p th:text="${recipe.description}">Recipe description...</p>
 
   <h2>Ingredients</h2>

@@ -17,18 +17,18 @@ public class IngredientController {
     @GetMapping
     public String list(Model model){
         model.addAttribute("ingredients", ingredientService.findAll());
-        return "ingredients/list";
+        return "ingredient-list";
     }
 
     @GetMapping("/new")
     public String createForm(Model model){
         model.addAttribute("ingredientDto", new IngredientDto());
-        return "ingredients/form";
+        return "ingredient-form";
     }
 
     @PostMapping
     public String create(@Valid @ModelAttribute("ingredientDto") IngredientDto ingredientDto, BindingResult bindingResult){
-        if (bindingResult.hasErrors()) return "ingredients/form";
+        if (bindingResult.hasErrors()) return "ingredient-form";
 
         Ingredient ingredient = Ingredient.builder().name(ingredientDto.getName()).build();
         ingredientService.saveIngredient(ingredient);

@@ -1,4 +1,5 @@
 package com.jun.recipe_ingredient.service;
+import com.jun.recipe_ingredient.dto.RecipeDto;
 import com.jun.recipe_ingredient.model.Ingredient;
 import com.jun.recipe_ingredient.model.Recipe;
 import com.jun.recipe_ingredient.repository.IngredientRepository;
@@ -33,14 +34,13 @@ public class RecipeService {
         recipeRepository.deleteById(id);
     }
 
-    public Recipe updateRecipe (Long id, Recipe recipe){
-        Recipe existRecipe = findById(id);
+    public void  updateRecipe (Long id, RecipeDto recipeDto){
+        Recipe existRecipe = recipeRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Recipe not found"));
 
-        existRecipe.setTitle(recipe.getTitle());
-
-        existRecipe.setDescription(recipe.getDescription());
-
-        return recipeRepository.save(existRecipe);
+        existRecipe.setTitle(recipeDto.getTitle());
+        existRecipe.setDescription(recipeDto.getDescription());
+        recipeRepository.save(existRecipe);
     }
 
     @Transactional

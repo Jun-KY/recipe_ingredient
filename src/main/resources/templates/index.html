@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Recipe Ingredient App</title>
+  <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+<div class="container home-container">
+  <div class="logo">🍲</div>
+  <h1>Recipe Ingredient App</h1>
+  <p>Welcome! Manage your recipes and ingredients with ease.<br>
+    <span class="accent">Start exploring or add a new recipe.</span>
+  </p>
+  <div class="nav">
+    <a th:href="@{/recipes}" class="button">View All Recipes</a>
+    <a th:href="@{/recipes/new}" class="button">Add a New Recipe</a>
+    <!-- <a th:href="@{/ingredients}" class="button">Manage Ingredients</a> -->
+  </div>
+</div>
+</body>
+</html>

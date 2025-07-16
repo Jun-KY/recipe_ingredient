@@ -9,10 +9,10 @@
 <div class="container">
   <h1 th:text="${recipe.id != null ? 'Edit Recipe' : 'Create New Recipe'}">Recipe Form</h1>
 
-  <form th:action="${recipe.id != null} ? @{'/recipes/' + ${recipe.id} + '/edit'} : @{/recipes}"
+  <form th:action="${recipe.id != null} ? @{/recipes/${recipe.id}/update'} : @{/recipes}"
         method="post">
     <label for="name">Name</label>
-    <input id="name" name="name" type="text" th:value="${recipe.name}" required>
+    <input id="name" name="title" type="text" th:value="${recipe.title}" required>
 
     <label for="description">Description</label>
     <textarea id="description" name="description" rows="4"

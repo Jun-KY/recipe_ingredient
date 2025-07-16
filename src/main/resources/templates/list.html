@@ -13,7 +13,7 @@
 
   <div class="recipe-list">
     <div class="recipe-card" th:each="recipe : ${recipes}">
-      <h3 th:text="${recipe.name}">Recipe Name</h3>
+      <h3 th:text="${recipe.title}">Recipe Name</h3>
       <p th:text="${recipe.description}">Short description of recipe...</p>
       <div>
         <a class="btn" th:href="@{|/recipes/${recipe.id}|}">View</a>

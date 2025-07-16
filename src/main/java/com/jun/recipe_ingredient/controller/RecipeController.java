@@ -20,7 +20,7 @@ public class RecipeController {
     @GetMapping
     public String list(Model model) {
         model.addAttribute("recipes", recipeService.findAll());
-        return "recipes/list";
+        return "list";
     }
 
     @GetMapping ("/{id}")
@@ -28,12 +28,18 @@ public class RecipeController {
         Recipe recipe = recipeService.findById(id);
         model.addAttribute("recipe", recipe);
         model.addAttribute("ingredient", new Ingredient());
-        return "recipes/detail";
+        return "detail";
+    }
+
+    @GetMapping("/new")
+    public String showCreateForm(Model model){
+        model.addAttribute("recipeDto", new RecipeDto());
+        return "form";
     }
 
     @PostMapping
     public String create(@Valid @ModelAttribute RecipeDto recipeDto, BindingResult bindingResult){
-        if (bindingResult.hasErrors()) return "recipes/form";
+        if (bindingResult.hasErrors()) return "form";
         Recipe recipe = Recipe.builder()
                 .title(recipeDto.getTitle())
                 .description(recipeDto.getDescription())
@@ -43,16 +49,22 @@ public class RecipeController {
     }
 
     @PostMapping("/{id}/update")
-    public String update(@PathVariable Long id,
-                         @Valid @RequestBody RecipeDto recipeDto, BindingResult bindingResult)
+    public String updateRecipe(@PathVariable Long id,
+                         @Valid @ModelAttribute("recipeDto")
+                         RecipeDto recipeDto,
+                         BindingResult bindingResult,
+                         Model model)
     {
-        if (bindingResult.hasErrors()) return "recipes/form";
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("recipeDto", recipeDto);
+            return "form";
+        }
 
-        Recipe recipe = recipeService.findById(id);
-        recipe.setTitle(recipeDto.getTitle());
-        recipe.setDescription(recipeDto.getDescription());
-        recipeService.saveRecipe(recipe);
-
+//        Recipe recipe = recipeService.findById(id);
+//        recipe.setTitle(recipeDto.getTitle());
+//        recipe.setDescription(recipeDto.getDescription());
+//        recipeService.saveRecipe(recipe);
+        recipeService.updateRecipe(id, recipeDto);
         return "redirect:/recipes/" + id;
     }
 
@@ -72,7 +84,7 @@ public class RecipeController {
 
     @PostMapping("/{id}/ingredients/{ingId}/remove")
     public String removeIngredient(@PathVariable Long id,
-                                   @PathVariable Long ingredientId){
+                                   @PathVariable("ingID") Long ingredientId){
         recipeService.removeIngredient(id, ingredientId);
         return "redirect:/recipes/" + id;
     }

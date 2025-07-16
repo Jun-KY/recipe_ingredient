@@ -6,9 +6,10 @@ import lombok.Setter;
 
 @Getter @Setter
 public class IngredientDto {
-    private String name;
+    private Long id;
 
     @NotBlank(message = "Ingredient name required")
-    private Long id;
+    private String name;
+
 
 }
