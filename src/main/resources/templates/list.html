@@ -15,13 +15,13 @@
     <div class="recipe-card" th:each="recipe : ${recipes}">
       <h3 th:text="${recipe.title}">Recipe Name</h3>
       <p th:text="${recipe.description}">Short description of recipe...</p>
-      <div>
-        <a class="btn" th:href="@{|/recipes/${recipe.id}|}">View</a>
-        <a class="btn btn-secondary" th:href="@{|/recipes/${recipe.id}/edit|}">Edit</a>
-        <form th:action="@{|/recipes/${recipe.id}/delete|}" method="post" style="display:inline;">
-          <button class="btn btn-danger" type="submit">Delete</button>
-        </form>
+        <form th:action="@{'/recipes/' + ${recipe.id} + '/delete'}" method="post" style="display:inline;">
+      <div class="button-row">
+        <a th:href="@{'/recipes/' + ${recipe.id}}" class="button view">View</a>
+        <a th:href="@{'/recipes/' + ${recipe.id} + '/edit'}" class="button edit" >Edit</a>
+          <button type="submit" class="button delete">Delete</button>
       </div>
+        </form>
     </div>
   </div>
 

@@ -2,42 +2,75 @@
 <html lang="en" html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title th:text="${recipe.title}">Recipe Detail</title>
+  <title th:text="'Recipe: ' + ${recipe.title}">Recipe Detail</title>
   <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 <body>
-<div class="container">
-  <h1 th:text="${recipe.title}">Recipe Name</h1>
+<div class="container recipe-detail-container">
+  <a th:href="@{/recipes}" class="button secondary" style="margin-bottom:1.2em;">← Back to List</a>
+  <h1 th:text="${recipe.title}">Recipe Title</h1>
   <p th:text="${recipe.description}">Recipe description...</p>
 
+  <!-- Ingredients Table -->
   <h2>Ingredients</h2>
   <table>
     <thead>
     <tr>
-      <th>Ingredient</th>
-      <th>Action</th>
+      <th>Name</th>
+      <th>Amount</th>
+      <th>Unit</th>
+      <th>Remove</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="ing : ${recipe.ingredients}">
-      <td th:text="${ing.name}">Ingredient Name</td>
+    <tr th:each="ri : ${recipe.recipeIngredients}">
+      <td th:text="${ri.ingredient.name}">Ingredient Name</td>
+      <td th:text="${ri.amount}">0</td>
+      <td th:text="${ri.unit}">unit</td>
       <td>
-        <form th:action="@{|/recipes/${recipe.id}/ingredients/${ing.id}/remove|}" method="post">
-          <button class="btn btn-danger" type="submit">Remove</button>
+        <form th:action="@{'/recipes/' + ${recipe.id} + '/ingredients/' + ${ri.id} + '/remove'}"
+              method="post" style="display:inline;">
+          <button type="submit" class="button delete">Remove</button>
         </form>
       </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(recipe.recipeIngredients)}">
+      <td colspan="4" style="text-align:center;">No ingredients yet.</td>
     </tr>
     </tbody>
   </table>
 
-  <h3>Add Ingredient</h3>
-  <form th:action="@{|/recipes/${recipe.id}/ingredients/add|}" method="post">
-    <label for="ingredientName">Ingredient Name</label>
-    <input type="text" id="ingredientName" name="ingredientName" required>
-    <button class="btn" type="submit">Add</button>
+  <!-- Add Ingredient Form -->
+  <h2 style="margin-top:2em;">Add Ingredient</h2>
+  <form th:action="@{'/recipes/' + ${recipe.id} + '/ingredients/add'}"
+        th:object="${ingredientForm}" method="post" class="ingredient-form">
+    <div style="display:flex; gap:0.7em; align-items:center; margin-bottom:1em;">
+      <input type="text" th:field="*{ingredientName}" placeholder="Ingredient name" required style="flex:2;"/>
+      <div th:if="${#fields.hasErrors('ingredientName')}" class="error" th:errors="*{ingredientName}"></div>
+      <input type="number" th:field="*{amount}" placeholder="Amount" step="0.01" required style="width:90px;"/>
+      <div th:if="${#fields.hasErrors('amount')}" class="error" th:errors="*{amount}"></div>
+      <select th:field="*{unit}" required style="width:85px;">
+        <option value="">Unit</option>
+        <option value="gram">gram</option>
+        <option value="ml">ml</option>
+        <option value="ea">ea</option>
+      </select>
+      <div th:if="${#fields.hasErrors('unit')}" class="error" th:errors="*{unit}"></div>
+
+      <button type="submit" class="button add">Add</button>
+    </div>
+    <div class="error" th:if="${#fields.hasErrors()}">
+      <span th:each="err : ${#fields.errors()}" th:text="${err}"></span>
+    </div>
   </form>
 
-  <a class="btn btn-secondary" th:href="@{/recipes}">⬅ Back to List</a>
+  <!-- Action Buttons -->
+  <div class="button-row" style="margin-top:2em;">
+    <a th:href="@{'/recipes/' + ${recipe.id} + '/edit'}" class="button edit">Edit</a>
+    <form th:action="@{'/recipes/' + ${recipe.id} + '/delete'}" method="post" style="display:inline;">
+      <button type="submit" class="button delete">Delete</button>
+    </form>
+  </div>
 </div>
 </body>
 </html>

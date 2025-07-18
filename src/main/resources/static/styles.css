@@ -63,6 +63,36 @@ a:hover {
   background: #5a6268;
 }
 
+
+.button-row {
+     display: flex;
+     gap: 0.7em;
+     margin-top: 1em;
+ }
+
+ .button-row .button {
+     width: auto;           /* Make buttons as wide as their text */
+     min-width: 72px;       /* Optional: keeps them not too tiny */
+     padding: 0.3em 1em;
+     text-align: center;
+     font-size: 1rem;
+     border-radius: 0.5em;
+     font-weight: 500;
+     border: none;
+     cursor: pointer;
+     transition: background 0.15s;
+     display: inline-block; /* Remove block-level style */
+ }
+
+.button.view   { background: #2777e2; color: #fff; }
+.button.edit   { background: #63666a; color: #fff; }
+.button.delete { background: #e63946; color: #fff; }
+
+.button.view:hover   { background: #165ec6; }
+.button.edit:hover   { background: #444; }
+.button.delete:hover { background: #c92c36; }
+
+
 /* Forms */
 form {
   margin-bottom: 1.5rem;
@@ -131,7 +161,23 @@ table th {
   flex-grow: 1;
   margin-bottom: 0.8rem;
 }
-
+.recipe-detail-container {
+    max-width: 580px;
+    margin: 48px auto;
+    background: #fff;
+    padding: 2.5rem 2rem;
+    border-radius: 2rem;
+    box-shadow: 0 2px 16px #0002;
+}
+.button-row {
+    display: flex;
+    gap: 1em;
+}
+.button.edit { background: #2777e2; color: #fff; }
+.button.add { background: #43a047; color: #fff; }
+.button.delete { background: #e63946; color: #fff; }
+.button.secondary { background: #bbb; color: #fff; }
+.button.secondary:hover { background: #888; }
 /* Footer */
 footer {
   margin-top: 40px;
@@ -146,4 +192,39 @@ footer {
     width: 100%;
     text-align: center;
   }
+}
+
+
+.ingredient-form input, .ingredient-form select {
+    margin-right: 0.5em;
+    padding: 0.5em;
+    border-radius: 0.4em;
+    border: 1px solid #bbb;
+}
+
+.ingredient-form .button {
+    padding: 0.5em 1.2em;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1em;
+}
+th, td {
+    padding: 0.7em 0.8em;
+    border-bottom: 1px solid #e3e3e3;
+    text-align: left;
+}
+.delete {
+    background: #e63946;
+    color: #fff;
+    border: none;
+    border-radius: 0.4em;
+    cursor: pointer;
+}
+.error {
+    color: #e63946;
+    font-size: 0.97em;
+    margin-top: 0.2em;
 }

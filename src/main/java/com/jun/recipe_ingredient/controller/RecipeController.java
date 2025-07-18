@@ -2,6 +2,7 @@ package com.jun.recipe_ingredient.controller;
 
 import com.jun.recipe_ingredient.dto.IngredientDto;
 import com.jun.recipe_ingredient.dto.RecipeDto;
+import com.jun.recipe_ingredient.dto.RecipeIngredientDto;
 import com.jun.recipe_ingredient.model.Ingredient;
 import com.jun.recipe_ingredient.model.Recipe;
 import com.jun.recipe_ingredient.service.RecipeService;
@@ -23,11 +24,11 @@ public class RecipeController {
         return "list";
     }
 
-    @GetMapping ("/{id}")
+    @GetMapping ("/{id:\\d+}")
     public String detail(@PathVariable Long id, Model model){
         Recipe recipe = recipeService.findById(id);
         model.addAttribute("recipe", recipe);
-        model.addAttribute("ingredient", new Ingredient());
+        model.addAttribute("ingredientForm", new RecipeIngredientDto());
         return "detail";
     }
 
@@ -48,6 +49,17 @@ public class RecipeController {
         return "redirect:/recipes";
     }
 
+    @GetMapping("/{id}/edit")
+    public String editRecipe(@PathVariable Long id, Model model){
+        Recipe recipe = recipeService.findById(id);
+        RecipeDto recipeDto = new RecipeDto();
+        recipeDto.setId(recipe.getId());
+        recipeDto.setTitle(recipe.getTitle());
+        recipeDto.setDescription(recipe.getDescription());
+        model.addAttribute("recipeDto", recipeDto);
+        return "form";
+    }
+
     @PostMapping("/{id}/update")
     public String updateRecipe(@PathVariable Long id,
                          @Valid @ModelAttribute("recipeDto")
@@ -59,11 +71,6 @@ public class RecipeController {
             model.addAttribute("recipeDto", recipeDto);
             return "form";
         }
-
-//        Recipe recipe = recipeService.findById(id);
-//        recipe.setTitle(recipeDto.getTitle());
-//        recipe.setDescription(recipeDto.getDescription());
-//        recipeService.saveRecipe(recipe);
         recipeService.updateRecipe(id, recipeDto);
         return "redirect:/recipes/" + id;
     }
@@ -76,16 +83,29 @@ public class RecipeController {
 
     @PostMapping("/{id}/ingredients/add")
     public String addIngredient(@PathVariable Long id,
-                                @ModelAttribute Ingredient ingredient){
-
-        recipeService.addIngredient(id, ingredient.getName());
+                                @ModelAttribute("ingredientForm") @Valid RecipeIngredientDto ingredientForm,
+                                BindingResult bindingResult,
+                                Model model){
+        if(bindingResult.hasErrors()){
+            Recipe recipe = recipeService.findById(id);
+            model.addAttribute("recipe", recipe);
+            return "detail";
+        }
+        try{
+            recipeService.addIngredient(id, ingredientForm.getIngredientName(), ingredientForm.getAmount(), ingredientForm.getUnit());
+        }catch (IllegalArgumentException e){
+            bindingResult.reject("duplicate", e.getMessage());
+            Recipe recipe = recipeService.findById(id);
+            model.addAttribute("recipe", recipe);
+            return "detail";
+        }
         return "redirect:/recipes/" + id;
     }
 
-    @PostMapping("/{id}/ingredients/{ingId}/remove")
+    @PostMapping("/{id}/ingredients/{recipeIngredientId}/remove")
     public String removeIngredient(@PathVariable Long id,
-                                   @PathVariable("ingID") Long ingredientId){
-        recipeService.removeIngredient(id, ingredientId);
+                                   @PathVariable("ingID") Long recipeIngredientId){
+        recipeService.removeIngredient(recipeIngredientId);
         return "redirect:/recipes/" + id;
     }
 }
