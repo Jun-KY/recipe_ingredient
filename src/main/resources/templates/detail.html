@@ -54,7 +54,7 @@
         + New
       </a>
 <!--      <div th:if="${#fields.hasErrors('ingredientId')}" class="error" th:errors="*{ingredientId}"></div>-->
-      <input type="number" th:field="*{amount}" placeholder="Amount" min="1" step="1" required style="width:90px;"/>
+      <input type="number" th:field="*{amount}" placeholder="Amount" min="0.1" step="1" required style="width:90px;"/>
 <!--      <div th:if="${#fields.hasErrors('amount')}" class="error" th:errors="*{amount}"></div>-->
       <select th:field="*{unit}" required style="width:85px;">
 <!--        <option value="">Unit</option>-->
