@@ -5,6 +5,7 @@ import com.jun.recipe_ingredient.dto.RecipeDto;
 import com.jun.recipe_ingredient.dto.RecipeIngredientDto;
 import com.jun.recipe_ingredient.model.Ingredient;
 import com.jun.recipe_ingredient.model.Recipe;
+import com.jun.recipe_ingredient.service.IngredientService;
 import com.jun.recipe_ingredient.service.RecipeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,22 +14,28 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @Controller @RequiredArgsConstructor @RequestMapping("/recipes")
 public class RecipeController {
     private final RecipeService recipeService;
-
+    private final IngredientService ingredientService;
     @GetMapping
     public String list(Model model) {
         model.addAttribute("recipes", recipeService.findAll());
         return "list";
     }
 
-    @GetMapping ("/{id:\\d+}")
+    @GetMapping ("/{id}")
     public String detail(@PathVariable Long id, Model model){
         Recipe recipe = recipeService.findById(id);
         model.addAttribute("recipe", recipe);
         model.addAttribute("ingredientForm", new RecipeIngredientDto());
+
+        List<Ingredient> allIngredients = ingredientService.findAll();
+        model.addAttribute("allIngredients", allIngredients);
+
         return "detail";
     }
 
@@ -83,16 +90,18 @@ public class RecipeController {
 
     @PostMapping("/{id}/ingredients/add")
     public String addIngredient(@PathVariable Long id,
-                                @ModelAttribute("ingredientForm") @Valid RecipeIngredientDto ingredientForm,
+                                @ModelAttribute("ingredientForm")
+                                @Valid RecipeIngredientDto ingredientForm,
                                 BindingResult bindingResult,
                                 Model model){
         if(bindingResult.hasErrors()){
             Recipe recipe = recipeService.findById(id);
             model.addAttribute("recipe", recipe);
+            model.addAttribute("allIngredients", ingredientService.findAll());
             return "detail";
         }
         try{
-            recipeService.addIngredient(id, ingredientForm.getIngredientName(), ingredientForm.getAmount(), ingredientForm.getUnit());
+            recipeService.addIngredient(id, ingredientForm.getIngredientId(), ingredientForm.getAmount(), ingredientForm.getUnit());
         }catch (IllegalArgumentException e){
             bindingResult.reject("duplicate", e.getMessage());
             Recipe recipe = recipeService.findById(id);
@@ -104,7 +113,7 @@ public class RecipeController {
 
     @PostMapping("/{id}/ingredients/{recipeIngredientId}/remove")
     public String removeIngredient(@PathVariable Long id,
-                                   @PathVariable("ingID") Long recipeIngredientId){
+                                   @PathVariable Long recipeIngredientId){
         recipeService.removeIngredient(recipeIngredientId);
         return "redirect:/recipes/" + id;
     }

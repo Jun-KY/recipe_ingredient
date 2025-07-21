@@ -3,29 +3,38 @@
 <head>
     <meta charset="UTF-8">
   <title>Recipe List</title>
+
   <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 <body>
-<div class="container">
-  <h1>🍳 Recipe List</h1>
+<div class="recipe-list-container">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1em;">
+    <a th:href="@{/}" class="button secondary" style="margin-right:1em;">← Back to Home</a>
+    <a th:href="@{/ingredients}" class="button secondary">Manage Ingredients</a>
+  </div>
+  <h1 style="display: flex; align-items: center; gap:0.45em; font-size:2.1rem;">
+    <span style="font-size:1.6em;">🔎</span>
+    <span>Recipe List</span>
+  </h1>
 
-  <a class="btn" th:href="@{/recipes/new}">➕ Add New Recipe</a>
+  <a th:href="@{/recipes/new}" class="button add" style="display:block; width:fit-content; margin:1.3em 0 1.7em 0;">+ Add New Recipe</a>
 
-  <div class="recipe-list">
-    <div class="recipe-card" th:each="recipe : ${recipes}">
-      <h3 th:text="${recipe.title}">Recipe Name</h3>
-      <p th:text="${recipe.description}">Short description of recipe...</p>
-        <form th:action="@{'/recipes/' + ${recipe.id} + '/delete'}" method="post" style="display:inline;">
-      <div class="button-row">
-        <a th:href="@{'/recipes/' + ${recipe.id}}" class="button view">View</a>
-        <a th:href="@{'/recipes/' + ${recipe.id} + '/edit'}" class="button edit" >Edit</a>
-          <button type="submit" class="button delete">Delete</button>
-      </div>
-        </form>
+  <!-- 레시피 카드 반복 -->
+  <div th:each="recipe : ${recipes}" class="recipe-card">
+    <div class="recipe-title" th:text="${recipe.title}"></div>
+    <div class="recipe-desc" th:text="${recipe.description}"></div>
+    <div class="recipe-actions">
+      <a th:href="@{'/recipes/' + ${recipe.id}}" class="button view">View</a>
+      <a th:href="@{'/recipes/' + ${recipe.id} + '/edit'}" class="button edit">Edit</a>
+      <form th:action="@{'/recipes/' + ${recipe.id} + '/delete'}" method="post" style="display:inline;">
+        <button type="submit" class="button delete" onclick="return confirm('Delete this recipe?')">Delete</button>
+      </form>
     </div>
   </div>
 
-  <footer>Recipe Sharing Platform © 2025</footer>
+  <div class="footer">
+    Recipe Sharing Platform By Jun© 2025
+  </div>
 </div>
 </body>
 </html>

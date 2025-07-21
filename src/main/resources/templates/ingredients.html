@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ingredient Management</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+    <link rel="stylesheet" th:href="@{/ingredient-styles.css}">
+</head>
+<div th:if="${errorMessage}" class="alert error" style="margin-bottom:1em; text-align:center;">
+    <span th:text="${errorMessage}"></span>
+</div>
+<body>
+<div class="container" style="max-width:560px; margin:48px auto;">
+    <!-- Nav bar -->
+    <div class="nav-bar">
+        <a th:href="@{/}" class="button secondary">← Home</a>
+        <a th:href="@{/recipes}" class="button secondary">Recipe List</a>
+    </div>
+
+    <h1>Ingredient Management</h1>
+
+    <!-- Search Row -->
+    <form method="get" action="#" class="search-row">
+        <input type="text" name="q" th:value="${query}" placeholder="Search ingredient..."/>
+        <button type="submit" class="button">Search</button>
+        <a th:href="@{/ingredients}" class="button secondary">Reset</a>
+    </form>
+
+    <!-- Add Ingredient Button -->
+    <div style="text-align:right; margin-bottom:1.4em;">
+        <a th:href="@{/ingredients/new}" class="button add">+ Add Ingredient</a>
+    </div>
+
+    <!-- Ingredient List Table -->
+    <table class="ingredient-table" style="width:100%;">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th style="width:170px;">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="ingredient : ${ingredients}">
+            <td th:text="${ingredient.name}"></td>
+            <td>
+                <div class="ingredient-actions" style="display: flex; gap: 0.4em;">
+                    <a th:href="@{'/ingredients/' + ${ingredient.id} + '/edit'}" class="button edit" >Edit</a>
+                    <form th:action="@{'/ingredients/' + ${ingredient.id} + '/delete'}" method="post" style="display:inline;">
+                        <button type="submit" class="button delete" onclick="return confirm('Delete this ingredient?')">Delete</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(ingredients)}">
+            <td colspan="2" class="no-ingredients">No ingredients found.</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

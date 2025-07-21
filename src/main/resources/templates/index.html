@@ -6,16 +6,15 @@
   <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 <body>
-<div class="container home-container">
+<div class="container" style="max-width:400px; margin:64px auto; text-align:center;">
   <div class="logo">🍲</div>
   <h1>Recipe Ingredient App</h1>
-  <p>Welcome! Manage your recipes and ingredients with ease.<br>
+  <p>Welcome! Manage your recipes and ingredients easily.<br>
     <span class="accent">Start exploring or add a new recipe.</span>
   </p>
-  <div class="nav">
-    <a th:href="@{/recipes}" class="button">View All Recipes</a>
-    <a th:href="@{/recipes/new}" class="button">Add a New Recipe</a>
-    <!-- <a th:href="@{/ingredients}" class="button">Manage Ingredients</a> -->
+  <div style="margin-top:2em;">
+    <a th:href="@{/recipes}" class="button" style="margin-right:1em;">Recipes</a>
+    <a th:href="@{/ingredients}" class="button">Ingredients</a>
   </div>
 </div>
 </body>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${ingredientId != null} ? 'Edit Ingredient' : 'Add Ingredient'">Ingredient</title>
+  <div class="nav-bar">
+  <link rel="stylesheet" th:href="@{/styles.css}">
+  <link rel="stylesheet" th:href="@{/ingredient-styles.css}">
+  </div>
+</head>
+<body>
+<div class="container" style="max-width:400px; margin:48px auto;">
+  <h1 th:text="${ingredientId != null} ? 'Edit Ingredient' : 'Add Ingredient'"></h1>
+  <form th:action="${ingredientId != null} ? @{'/ingredients/' + ${ingredientId} + '/edit'} : @{/ingredients/new}"
+        th:object="${ingredientDto}" method="post">
+    <div>
+      <input type="text" th:field="*{name}" placeholder="Ingredient name" required />
+      <div th:if="${#fields.hasErrors('name')}" class="error" th:errors="*{name}"></div>
+    </div>
+    <div style="margin-top:1em;">
+      <button type="submit" class="button">
+        <span th:text="${ingredientId != null} ? 'Save' : 'Add'"></span>
+      </button>
+      <a th:href="@{/ingredients}" class="button secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+</body>
+</html>

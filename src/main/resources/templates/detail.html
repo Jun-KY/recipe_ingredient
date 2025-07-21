@@ -13,29 +13,28 @@
 
   <!-- Ingredients Table -->
   <h2>Ingredients</h2>
-  <table>
+  <table class="ingredient-table" style="margin-top:1.2em; min-width:400px;">
     <thead>
     <tr>
       <th>Name</th>
       <th>Amount</th>
       <th>Unit</th>
-      <th>Remove</th>
+      <th style="width:110px;">Remove</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="ri : ${recipe.recipeIngredients}">
-      <td th:text="${ri.ingredient.name}">Ingredient Name</td>
-      <td th:text="${ri.amount}">0</td>
-      <td th:text="${ri.unit}">unit</td>
+      <td th:text="${ri.ingredient.name}"></td>
+      <td th:text="${ri.amount}"></td>
+      <td th:text="${ri.unit}"></td>
       <td>
-        <form th:action="@{'/recipes/' + ${recipe.id} + '/ingredients/' + ${ri.id} + '/remove'}"
-              method="post" style="display:inline;">
-          <button type="submit" class="button delete">Remove</button>
+        <form th:action="@{'/recipes/' + ${recipe.id} + '/ingredients/' + ${ri.id} + '/remove'}" method="post" style="display:inline;">
+          <button type="submit" class="button delete small">Remove</button>
         </form>
       </td>
     </tr>
     <tr th:if="${#lists.isEmpty(recipe.recipeIngredients)}">
-      <td colspan="4" style="text-align:center;">No ingredients yet.</td>
+      <td colspan="4" style="text-align:center; color:#bbb;">No ingredients.</td>
     </tr>
     </tbody>
   </table>
@@ -45,29 +44,38 @@
   <form th:action="@{'/recipes/' + ${recipe.id} + '/ingredients/add'}"
         th:object="${ingredientForm}" method="post" class="ingredient-form">
     <div style="display:flex; gap:0.7em; align-items:center; margin-bottom:1em;">
-      <input type="text" th:field="*{ingredientName}" placeholder="Ingredient name" required style="flex:2;"/>
-      <div th:if="${#fields.hasErrors('ingredientName')}" class="error" th:errors="*{ingredientName}"></div>
-      <input type="number" th:field="*{amount}" placeholder="Amount" step="0.01" required style="width:90px;"/>
-      <div th:if="${#fields.hasErrors('amount')}" class="error" th:errors="*{amount}"></div>
+      <select th:field="*{ingredientId}" required style="flex:2; min-width:120px;">
+        <option value="" disabled selected>Choose ingredient</option>
+        <option th:each="ing : ${allIngredients}" th:value="${ing.id}" th:text="${ing.name}"></option>
+      </select>
+      <a th:href="@{/ingredients/new}"
+         class="button add"
+         style="margin-left: 0.5em; padding: 0.53em 1.1em; vertical-align: middle; text-decoration: none;">
+        + New
+      </a>
+<!--      <div th:if="${#fields.hasErrors('ingredientId')}" class="error" th:errors="*{ingredientId}"></div>-->
+      <input type="number" th:field="*{amount}" placeholder="Amount" min="1" step="1" required style="width:90px;"/>
+<!--      <div th:if="${#fields.hasErrors('amount')}" class="error" th:errors="*{amount}"></div>-->
       <select th:field="*{unit}" required style="width:85px;">
-        <option value="">Unit</option>
-        <option value="gram">gram</option>
+<!--        <option value="">Unit</option>-->
+        <option value="g">g</option>
         <option value="ml">ml</option>
         <option value="ea">ea</option>
       </select>
-      <div th:if="${#fields.hasErrors('unit')}" class="error" th:errors="*{unit}"></div>
 
       <button type="submit" class="button add">Add</button>
     </div>
-    <div class="error" th:if="${#fields.hasErrors()}">
-      <span th:each="err : ${#fields.errors()}" th:text="${err}"></span>
+
+
+    <div th:if="${#fields.hasGlobalErrors()}" class="error" style="margin-top:0.7em;">
+      <span th:each="err : ${#fields.globalErrors()}" th:text="${err}"></span>
     </div>
   </form>
 
   <!-- Action Buttons -->
   <div class="button-row" style="margin-top:2em;">
-    <a th:href="@{'/recipes/' + ${recipe.id} + '/edit'}" class="button edit">Edit</a>
     <form th:action="@{'/recipes/' + ${recipe.id} + '/delete'}" method="post" style="display:inline;">
+      <a th:href="@{'/recipes/' + ${recipe.id} + '/edit'}" class="button edit">Edit</a>
       <button type="submit" class="button delete">Delete</button>
     </form>
   </div>

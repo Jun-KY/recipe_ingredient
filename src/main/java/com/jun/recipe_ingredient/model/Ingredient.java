@@ -20,8 +20,8 @@ public class Ingredient {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "ingredients")
-    private Set<Recipe> recipes = new HashSet<>();
+//    @ManyToMany(mappedBy = "ingredients")
+//    private Set<Recipe> recipes = new HashSet<>();
 
     @OneToMany(mappedBy = "ingredient")
     private List<RecipeIngredient> recipeIngredients = new ArrayList<>();

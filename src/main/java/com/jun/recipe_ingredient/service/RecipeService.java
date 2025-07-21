@@ -4,8 +4,10 @@ import com.jun.recipe_ingredient.model.Ingredient;
 import com.jun.recipe_ingredient.model.Recipe;
 import com.jun.recipe_ingredient.model.RecipeIngredient;
 import com.jun.recipe_ingredient.repository.IngredientRepository;
+import com.jun.recipe_ingredient.repository.RecipeIngredientRepository;
 import com.jun.recipe_ingredient.repository.RecipeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +22,7 @@ public class RecipeService {
     private final RecipeIngredientRepository recipeIngredientRepository;
 
     public List<Recipe> findAll() {
-        return recipeRepository.findAll();
+        return recipeRepository.findAll(Sort.by("title").ascending());
     }
 
     public Recipe findById(Long id){
@@ -46,15 +48,15 @@ public class RecipeService {
     }
 
     @Transactional
-    public void addIngredient(Long recipeId, String ingredientName, Double amount, String unit){
+    public void addIngredient(Long recipeId, Long ingredientId, Double amount, String unit){
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new NoSuchElementException("Recipe not found"));
 
-        Ingredient ingredient = ingredientRepository.findByName(ingredientName)
-                .orElseGet(() -> ingredientRepository.save(Ingredient.builder().name(ingredientName).build()));
+        Ingredient ingredient = ingredientRepository.findById(ingredientId)
+                .orElseThrow(() -> new NoSuchElementException("Ingredient not found"));
 
         boolean alreadyExists = recipe.getRecipeIngredients().stream()
-                .anyMatch(ri -> ri.getIngredient().getName().equalsIgnoreCase(ingredientName));
+                .anyMatch(ri -> ri.getIngredient().getId().equals(ingredientId));
         if (alreadyExists){
             throw new IllegalArgumentException("Ingredient already exists in the recipe");
         }
